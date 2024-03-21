@@ -1,7 +1,11 @@
 import React from 'react'
-
+import {BrowserRouter} from 'react-router-dom'
+import AllRoutes from './routes'
+// import Routes from './routes'
 export default function App() {
   return (
-    <h1 className='text-red-600'> App</h1>
+    <BrowserRouter>
+      <AllRoutes/>
+    </BrowserRouter>
   )
 }
