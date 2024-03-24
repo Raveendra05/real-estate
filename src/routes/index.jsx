@@ -5,6 +5,7 @@ import About from '../pages/about'
 import Profile from '../pages/profile'
 import SignIn from '../pages/signIn'
 import SignUp from '../pages/signUp'
+import NotFound from '../pages/notfound'
 export default function AllRoutes() {
   return (
     <>
@@ -14,7 +15,7 @@ export default function AllRoutes() {
     <Route path='/profile' element={<Profile/>}  />
     <Route path='/signin' element={<SignIn/>}  />
     <Route path='/signup' element={<SignUp/>}  />
-
+    <Route path='*' element={<NotFound/>}/>
     </Routes>
     </>
   )
