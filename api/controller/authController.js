@@ -48,7 +48,7 @@ const SignUpController = async(req ,res)=>{
 
 const SignInController =async(req,res)=>{
     try {
-    const {email , password} = req.body;
+    const {email , password} = req.body.formData;
         if(!email){
             return res.status(500).send({
                 message:"email is required"
@@ -80,7 +80,7 @@ const SignInController =async(req,res)=>{
         //     message:"login sucessfully",
             
         // })
-        res.cookie('access_token' , token , {httpOnly : true , expires:new Date(Date.now()+60*60)})
+        res.cookie('access_token' , token , {httpOnly : true})
         .status(200)
         .json(rest)
     } catch (error) {
