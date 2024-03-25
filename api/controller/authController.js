@@ -2,7 +2,7 @@ const  userModel  = require('../../api/models/userModel');
 const bcrypt = require('bcrypt');
 const { hashPassword } = require('../../api/utils/utils')
 const SignUpController = async(req ,res)=>{
-    const {username , password , email} = req.body;
+    const {username , password , email} = req.body.formData;
     try {
         if(!username){
             return res.status(500).send({
@@ -17,6 +17,12 @@ const SignUpController = async(req ,res)=>{
         if(!email){
             return res.status(500).send({
                 message:"email is required"
+            })
+        }
+        const match_user = await userModel.findOne({username})
+        if(match_user){
+            return res.status(500).send({
+                message:"username is already exist"
             })
         }
         const match = await userModel.findOne({email})
