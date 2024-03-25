@@ -1,6 +1,7 @@
 const  userModel  = require('../../api/models/userModel');
 const bcrypt = require('bcrypt');
-const { hashPassword } = require('../../api/utils/utils')
+const jwt = require('jsonwebtoken')
+const { hashPassword, comparePass } = require('../../api/utils/utils')
 const SignUpController = async(req ,res)=>{
     const {username , password , email} = req.body.formData;
     try {
@@ -44,4 +45,46 @@ const SignUpController = async(req ,res)=>{
         console.log(error)
     }
 }
-module.exports = {SignUpController}
+
+const SignInController =async(req,res)=>{
+    try {
+    const {email , password} = req.body;
+        if(!email){
+            return res.status(500).send({
+                message:"email is required"
+            })
+        }
+        if(!password){
+            return res.status(500).send({
+                message:"password is required"
+            })
+        }
+        const Vaild_User = await userModel.findOne({email})
+        if(!Vaild_User){
+            return res.status(500).send({
+                sucess:false , 
+                message:"User not Exist or Vaild User"
+            })
+        }
+        const Vaild_Password = await comparePass(password , Vaild_User.password)
+        if(!Vaild_Password){
+            return res.status(500).send({
+                sucess:false,
+                message:"password is incorrect"
+            })
+        }
+        const token = await jwt.sign({id:Vaild_User._id} , process.env.SECRET_KEY)
+        const {password:pass , ...rest} = Vaild_User._doc
+        // res.status(200).send({
+        //     sucess:true,
+        //     message:"login sucessfully",
+            
+        // })
+        res.cookie('access_token' , token , {httpOnly : true , expires:new Date(Date.now()+60*60)})
+        .status(200)
+        .json(rest)
+    } catch (error) {
+        console.log(error);
+    }
+}
+module.exports = {SignUpController ,SignInController}
