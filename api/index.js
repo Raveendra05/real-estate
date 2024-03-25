@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dotnev = require('dotenv')
 const userRoutes = require('../api/routes/userRoutes')
+const AuthRoutes = require('./routes/authRoute')
 const cors = require('cors')
 dotnev.config()
 const app = express()
@@ -14,6 +15,8 @@ mongoose.connect(process.env.MONGO_URL).then(()=>{
 })
 
 app.use('/api/user' , userRoutes)
+app.use('/api/auth' , AuthRoutes)
+
 app.listen(3000 , ()=>{
     console.log("we are at port 3000");
 })
