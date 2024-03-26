@@ -6,14 +6,17 @@ import Profile from '../pages/profile'
 import SignIn from '../pages/signIn'
 import SignUp from '../pages/signUp'
 import NotFound from '../pages/notfound'
+import PrivateRoute from '../component/privateRoute'
 export default function AllRoutes() {
   return (
     <>
     <Routes>
     <Route path='/' element={<Home/>}  />
     <Route path='/about' element={<About/>}  />
-    <Route path='/profile' element={<Profile/>}  />
     <Route path='/signin' element={<SignIn/>}  />
+    <Route  element={<PrivateRoute/>}>
+    <Route path='/profile' element={<Profile/>}  />
+    </Route>
     <Route path='/signup' element={<SignUp/>}  />
     <Route path='*' element={<NotFound/>}/>
     </Routes>
