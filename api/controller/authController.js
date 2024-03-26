@@ -87,4 +87,37 @@ const SignInController =async(req,res)=>{
         console.log(error);
     }
 }
-module.exports = {SignUpController ,SignInController}
+
+const GoogleController = async(req, res)=>{
+    try {
+        const user = await userModel.findOne({
+            email:req.body.email
+        })
+        if(user){
+            const token =  jwt.sign({id:user._id } , process.env.SECRET_KEY)
+            const {password:pass , ...rest} = user._doc;
+            res.cookie('access_token' , token , {httpOnly:true})
+            .status(200)
+            .json(rest);
+        }
+        else{
+            const generatePassword = Math.random().toString(36).slice(-8)
+            const hashdPassword = await hashPassword(generatePassword)
+            const newUser =await  new userModel({
+                username:req.body.name.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-4)   , 
+                email:req.body.email , 
+                password:hashdPassword,
+                avatar : req.body.photo
+            })
+            await newUser.save()
+            const token = jwt.sign({id:newUser._id}  , process.env.SECRET_KEY)
+            const {password : pass , ...rest} = newUser._doc;
+            res.cookie('access_token' , token , {httpOnly:true})
+            .status(200)
+            .json(rest)
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+module.exports = {SignUpController ,SignInController,GoogleController}
