@@ -44,11 +44,11 @@ const handleFileUpload = (file)=>{
     const progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
     console.log('upload is' +progress + '% done');
     setFilePerc(Math.round(progress))
-console.log(filePerc);
+// console.log(filePerc);
   },
   (error) =>{
     setFileUploadError(true)
-    console.log(error);
+    // console.log(error);
   },
   ()=>{
     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>

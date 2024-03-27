@@ -4,10 +4,12 @@ const dotnev = require('dotenv')
 const userRoutes = require('../api/routes/userRoutes')
 const AuthRoutes = require('../api/routes/authRoute')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 dotnev.config()
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log("connected to database");
 }).catch((error)=>{

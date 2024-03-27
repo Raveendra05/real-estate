@@ -48,7 +48,7 @@ const SignUpController = async(req ,res)=>{
 
 const SignInController =async(req,res)=>{
     try {
-    const {email , password} = req.body.formData;
+    const {email , password} = req.body
         if(!email){
             return res.status(500).send({
                 message:"email is required"
