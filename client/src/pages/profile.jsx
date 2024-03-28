@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase';
 import axios from 'axios'
+import {Link} from 'react-router-dom'
 import { updateUserStart, updateUserSucess, updateUserFailure, deleteUserStart, deleteUserSucess, deleteUserFailure, signOutUserStart } from '../redux/user/userSlice'
 export default function Profile() {
   const { currentUser, loading, Error } = useSelector((state) => state.user)
@@ -11,7 +12,7 @@ export default function Profile() {
   const [filePerc, setFilePerc] = useState(0)
   const [fileUploadError, setFileUploadError] = useState(false)
   const [formData, setFormData] = useState({})
-  const [sucessMessage , setSucessMessage] = useState(false)
+  const [sucessMessage, setSucessMessage] = useState(false)
   const dispatch = useDispatch()
   // console.log(formData);
   // console.log(fileUploadError);
@@ -77,33 +78,33 @@ export default function Profile() {
       }
     } catch (error) {
       dispatch(updateUserFailure(error.response.data.message))
-      console.log("error" , error);
+      console.log("error", error);
     }
   }
-  const handleDelete =async()=>{
+  const handleDelete = async () => {
     try {
       dispatch(deleteUserStart())
       const res = await axios.delete(`/api/user/deleteUser/${currentUser._id}`)
-      if(res.status === 200){
+      if (res.status === 200) {
         dispatch(deleteUserSucess(res.data))
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.response.data.message))
     }
   }
-  const handleSignOut = async()=>{
-      try {
-        dispatch(signOutUserStart())
-        const res = await axios.get(`/api/auth/signout`)
-        if(res.status === 200){
-          dispatch(deleteUserSucess(res.data))
-        }
-      } catch (error) {
-        
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart())
+      const res = await axios.get(`/api/auth/signout`)
+      if (res.status === 200) {
+        dispatch(deleteUserSucess(res.data))
       }
+    } catch (error) {
+
+    }
   }
   return (
-    <div className='p-3 max-w-lg mx-auto'>  
+    <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <input type="file"
@@ -136,6 +137,7 @@ export default function Profile() {
         <input defaultValue={currentUser.email} id='email' type="text" placeholder='email' className='border p-3 rounded-lg' onChange={handleChange} />
         <input type="password" placeholder='password' className='border p-3 rounded-lg' id='password' onChange={handleChange} />
         <button disabled={loading} className='bg-slate-700 p-3 rounded-lg text-white  uppercase hover:opacity-95 disabled:opacity-80' type='submit'>{loading ? "Loading..." : " Update"}</button>
+        <Link className='bg-green-700 p-3 rounded-lg uppercase text-white text-center hover:opacity-90' to={"/create-listing"}>Create Listing</Link>
       </form>
       <div className='flex justify-between mt-4'>
         <span className='text-red-700 cursor-pointer' onClick={handleDelete}>Delete account</span>
@@ -143,12 +145,12 @@ export default function Profile() {
       </div>
       <p className='text-red-700 mt-5'>
         {
-          Error ? Error :""
+          Error ? Error : ""
         }
       </p>
       <p className='text-green-700 mt-5'>{
-        sucessMessage ? "User is updated Sucessfully":" "
-}</p>
+        sucessMessage ? "User is updated Sucessfully" : " "
+      }</p>
     </div>
   )
 }
