@@ -15,7 +15,9 @@ export default function SignUp() {
       [e.target.id]:e.target.value
     })
   }
+  
   const handleSubmit=async(e)=>{
+    // console.log(formData);
     dispatch(signInStart())
     e.preventDefault();
     try {
@@ -35,8 +37,8 @@ export default function SignUp() {
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
       <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
-        <input type="email" placeholder='email' className='border p-3 rounded-lg' id='email'onChange={handleChange}/>
-        <input type="password" placeholder='password' className='border p-3 rounded-lg' id='password'onChange={handleChange}/>
+        <input type="email" placeholder='email' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
+        <input type="password" placeholder='password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button disabled={loading} className='bg-slate-700 p-3 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-80' type='submit'>{loading ?"Loading...":"Sign In"}</button>
         <OAuth/>
       </form>

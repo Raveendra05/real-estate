@@ -22,6 +22,13 @@ const TokenVerification  = (req, res ,next)=>{
            req.user = decode
            next()
         }
+        else{
+            return res.status(500).send({
+                sucess:false , 
+                message:"not authenticated"
+
+            })
+        }
     } catch (error) {
         console.log(error);
     }

@@ -8,6 +8,8 @@ const test = (req , res)=>{
 }
 const UpdateUserController  =async(req, res)=>{
     try {
+        // console.log(req.user);
+        // console.log(req.body);
         if(req.user.id !== req.params.id){
             return res.status(500).send({
                 sucess:false , 
@@ -19,10 +21,10 @@ const UpdateUserController  =async(req, res)=>{
         }
         const updateUser = await userModel.findByIdAndUpdate(req.params.id , {
             $set:{
-                username:req.body.username , 
-                email:req.body.email , 
-                password :req.body.password , 
-                avatar:req.body.avatar
+                username:req.body.formData.username , 
+                email:req.body.formData.email , 
+                password :req.body.formData.password , 
+                avatar:req.body.formData.avatar
             }
         } , {new:true})
         // console.log(updateUser);
