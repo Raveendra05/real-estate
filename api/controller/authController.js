@@ -121,4 +121,16 @@ const GoogleController = async(req, res)=>{
         console.log(error);
     }
 }
-module.exports = {SignUpController ,SignInController,GoogleController}
+
+const SignOutController = async(req, res)=>{
+    try {
+        res.clearCookie('access_token')
+        res.status(200).json('User is logged our Sucessfully')
+    } catch (error) {
+        res.status(500).send({
+            sucess:false , 
+            message:"error in Logged out the user"
+        })
+    }
+}
+module.exports = {SignUpController ,SignInController,GoogleController ,SignOutController}

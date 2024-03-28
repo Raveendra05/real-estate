@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase';
 import axios from 'axios'
-import { updateUserStart, updateUserSucess, updateUserFailure, deleteUserStart, deleteUserSucess, deleteUserFailure } from '../redux/user/userSlice'
+import { updateUserStart, updateUserSucess, updateUserFailure, deleteUserStart, deleteUserSucess, deleteUserFailure, signOutUserStart } from '../redux/user/userSlice'
 export default function Profile() {
   const { currentUser, loading, Error } = useSelector((state) => state.user)
   const fileRef = useRef(null)
@@ -91,6 +91,17 @@ export default function Profile() {
       dispatch(deleteUserFailure(error.response.data.message))
     }
   }
+  const handleSignOut = async()=>{
+      try {
+        dispatch(signOutUserStart())
+        const res = await axios.get(`/api/auth/signout`)
+        if(res.status === 200){
+          dispatch(deleteUserSucess(res.data))
+        }
+      } catch (error) {
+        
+      }
+  }
   return (
     <div className='p-3 max-w-lg mx-auto'>  
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -128,7 +139,7 @@ export default function Profile() {
       </form>
       <div className='flex justify-between mt-4'>
         <span className='text-red-700 cursor-pointer' onClick={handleDelete}>Delete account</span>
-        <span className='text-red-700 cursor-pointer'>Sign out</span>
+        <span className='text-red-700 cursor-pointer' onClick={handleSignOut}>Sign out</span>
       </div>
       <p className='text-red-700 mt-5'>
         {
