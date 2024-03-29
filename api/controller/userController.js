@@ -1,5 +1,6 @@
 // const bcrypt = require('bcrypt')
 const userModel = require("../../api/models/userModel");
+const listingModel = require('../models/listing-model')
 const { hashPassword } = require("../utils/utils");
 const test = (req, res) => {
   res.send({
@@ -54,4 +55,25 @@ const DeleteUserController = async (req, res) => {
     console.log(error);
   }
 };
-module.exports = { test, UpdateUserController, DeleteUserController };
+
+const getUserAllListings = async(req, res)=>{
+  if(req.user.id === req.params.id){
+    try {
+      const listings = await listingModel.find({ userRef:req.params.id })
+      res.status(200).send({
+        sucess:true , 
+        listings
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  else{
+    return  res.status(500).send({
+      sucess:"false" , 
+      message:"you can only view our own listing"
+    })
+  }
+
+}
+module.exports = { test, UpdateUserController, DeleteUserController,getUserAllListings };
