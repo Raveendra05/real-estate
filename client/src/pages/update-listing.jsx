@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
 import axios from 'axios'
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-export default function CreateListing() {
+import { useNavigate, useParams } from 'react-router-dom';
+export default function UpdateListing() {
     const [files, setFiles] = useState([])
     const { currentUser } = useSelector((state) => state.user)
     const [error, setError] = useState(null)
@@ -28,7 +28,19 @@ export default function CreateListing() {
     })
     const [loading, setLoading] = useState(false)
     const [imageUploadError, setImageUploadError] = useState(null)
-
+    const params = useParams()
+    console.log(formData);
+    useEffect(()=>{
+        const fetchData = async()=>{
+            const listId =params.listingId
+            const res = await axios.get(`/api/listing/get-listing/${listId}`)
+            if(res.data.sucess){
+                setFormData(res.data.userData)
+            }
+            // console.log("updated-formData" , formData);
+        }
+        fetchData()
+    },[])
     // console.log("currentuser" , currentUser);
     // console.log(formData);
     const handleImageSubmit = (e) => {
@@ -104,18 +116,22 @@ export default function CreateListing() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setFormData({
+            ...formData , formData
+        })
+        console.log(formData);
         try {
             if (formData.imageUrls.length < 1) return setError('you had to upload atleast 1 image')
             if (+formData.regularPrice < +formData.discountedPrice) return setError('discounted price should be less than regular price')
             setLoading(true)
             setError(false)
-            const res = await axios.post('/api/listing/create-listing', {
+            const res = await axios.post(`/api/listing/update-listing/${params.listingId}`, {
                 formData
             })
             console.log("res", res);
             if (res.status === 200) {
                 setLoading(false);
-                navigate(`/listing/${res.data._id}`)
+                navigate(`/listing/${res.data.updatedlist._id}`)
             }
         } catch (error) {
             setError(error.response.data.error.message)
@@ -124,7 +140,7 @@ export default function CreateListing() {
     }
     return (
         <main className='p-3 max-w-4xl  mx-auto'>
-            <h1 className='text-3xl font-semibold text-center my-7'>Create Listing</h1>
+            <h1 className='text-3xl font-semibold text-center my-7'>Update Listing</h1>
             <form className='flex flex-col sm:flex-row gap-3' onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-4 flex-1'>
                     <input type="text" placeholder='Name' id='name' className='border p-3 rounded-lg' maxLength='60' minLength='3' required onChange={handleChange} value={formData.name} />
@@ -187,7 +203,6 @@ export default function CreateListing() {
                                 </div>
                             )
                         }
-
                     </div>
                 </div>
                 <div className='flex flex-col flex-1 gap-3'>
@@ -210,8 +225,8 @@ export default function CreateListing() {
                             </div>
                         ))
                     }
-                    <button  disabled={uploading || loading} className='p-3 bg-slate-800 rounded-lg uppercase text-white hover:opacity-90 disabled:opacity-80'>{
-                        loading ? "Listing...." : "Create Listing"
+                    <button disabled={uploading || loading} className='p-3 bg-slate-800 rounded-lg uppercase text-white hover:opacity-90 disabled:opacity-80'>{
+                        loading ? "Listing...." : "Update Listing"
                     }</button>
                     {
                         <p className='text-red-600 text-sm'>{error && error}</p>

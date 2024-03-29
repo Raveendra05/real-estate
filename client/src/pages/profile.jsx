@@ -190,12 +190,14 @@ export default function Profile() {
                 <img src={list.imageUrls[0]} alt="no image"
                   className='w-20 h-20  object-contain rounded-lg' />
               </Link>
-              <Link to={`listings/${list._id}`} className='text-slate-700 font-semibold hover:underline truncate flex-1'>
+              <Link to={`/listings/${list._id}`} className='text-slate-700 font-semibold hover:underline truncate flex-1'>
                 <p className=''>{list.name}</p>
               </Link>
               <div className='flex flex-col items-center'>
                 <button onClick={()=>handleDeleteListing(list._id)} className='text-red-600 uppercase'>Delete</button>
-                <button className='text-green-700 uppercase'>Edit</button>
+                <Link to={`/update-listing/${list._id}`}>
+                <button  className='text-green-700 uppercase'>Edit</button>
+                </Link>
               </div>
             </div>
           ))}

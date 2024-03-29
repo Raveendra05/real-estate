@@ -36,4 +36,59 @@ const DeleteUserListing =async(req, res)=>{
         })
     }
 }
-module.exports = {CreateListingController ,DeleteUserListing}
+
+const UpdateListingUserController = async(req, res)=>{
+    // console.log(req.body);
+    const list = await listingModel.findById(req.params.id)
+    if(!list){
+        return res.status(500).send({
+            sucess:false , 
+            message:"listing not found"
+        })
+    }
+    if(req.user.id !== list.userRef){
+        return res.status(500).send({
+            sucess:false , 
+            message:"you can update your own listing"
+        })
+    }
+    try {
+        const updatedlist = await listingModel.findByIdAndUpdate(req.params.id , req.body.formData , {
+            new:true
+        })
+        res.status(200).send({
+            sucess:true , 
+            message:"updated sucessfully" , 
+            updatedlist
+        })
+    } catch (error) {
+        res.status(500).send({
+            message:"error in updating the user listing"
+        })
+    }
+}
+
+const GetUserListing = async(req ,res)=>{
+    try {
+        const userData = await listingModel.findById(req.params.id)
+        if(!userData){
+            return res.status(500).send({
+                sucess:false , 
+                message:"listing is not found"
+            })
+        }
+        // console.log(userData);
+        res.status(200).send({
+            sucess:true , 
+            message:"user data is",
+            userData
+        })
+
+    } catch (error) {
+        res.status(500).send({
+            sucess:false ,
+            message:"error in getting the the data of user"
+        })
+    }
+}
+module.exports = {CreateListingController ,DeleteUserListing,UpdateListingUserController , GetUserListing}
