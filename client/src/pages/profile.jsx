@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase';
 import axios from 'axios'
-import {Link} from 'react-router-dom'
-import { updateUserStart, updateUserSucess, updateUserFailure, deleteUserStart, deleteUserSucess, deleteUserFailure, signOutUserStart } from '../redux/user/userSlice'
+import { Link } from 'react-router-dom'
+import { updateUserStart, updateUserSucess, updateUserFailure, deleteUserStart, deleteUserSucess, deleteUserFailure, signOutUserStart, signOutUserFailure } from '../redux/user/userSlice'
 export default function Profile() {
   const { currentUser, loading, Error } = useSelector((state) => state.user)
   const fileRef = useRef(null)
@@ -13,6 +13,8 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false)
   const [formData, setFormData] = useState({})
   const [sucessMessage, setSucessMessage] = useState(false)
+  const [showListingError, setShowListingError] = useState(false)
+  const [listings, setListings] = useState([])
   const dispatch = useDispatch()
   // console.log(formData);
   // console.log(fileUploadError);
@@ -100,8 +102,31 @@ export default function Profile() {
         dispatch(deleteUserSucess(res.data))
       }
     } catch (error) {
-
+      dispatch(signOutUserFailure(error.response.data.message))
     }
+  }
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(false)
+      const res = await axios.get(`/api/user/listings/${currentUser._id}`)
+      if (res.data.sucess) {
+        setListings(res.data.listings)
+      }
+      console.log("listings", listings);
+    } catch (error) {
+      setShowListingError(true)
+    }
+  }
+  const handleDeleteListing = async(listingId)=>{
+    try {
+      const res = await axios.delete(`/api/listing/delete-listing/${listingId}`)
+      if(res.data.sucess){
+        setListings((prev)=> prev.filter((listing)=>  listing._id !== listingId))
+      }
+    } catch (error) {
+      console.log(error.message);
+    } 
   }
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -151,6 +176,32 @@ export default function Profile() {
       <p className='text-green-700 mt-5'>{
         sucessMessage ? "User is updated Sucessfully" : " "
       }</p>
+      <button onClick={handleShowListings} className='text-green-700 w-full'>Show Listing</button>
+      <p className='text-red-700 mt-3 text-sm'>{showListingError && "Error in show the Listing"}</p>
+
+
+      {
+        listings && listings.length > 0 &&
+        <div className='flex flex-col gap-4'>
+          <h1 className='text-center text-2xl font-semibold mt-7'>Your Listings</h1>
+          {listings.map((list) => (
+            <div key={list._id} className=' border rounded-lg p-3 flex justify-between items-center gap-4'>
+              <Link to={`/listings/${list._id}`}>
+                <img src={list.imageUrls[0]} alt="no image"
+                  className='w-20 h-20  object-contain rounded-lg' />
+              </Link>
+              <Link to={`listings/${list._id}`} className='text-slate-700 font-semibold hover:underline truncate flex-1'>
+                <p className=''>{list.name}</p>
+              </Link>
+              <div className='flex flex-col items-center'>
+                <button onClick={()=>handleDeleteListing(list._id)} className='text-red-600 uppercase'>Delete</button>
+                <button className='text-green-700 uppercase'>Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      }
     </div>
   )
 }

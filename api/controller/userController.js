@@ -60,6 +60,7 @@ const getUserAllListings = async(req, res)=>{
   if(req.user.id === req.params.id){
     try {
       const listings = await listingModel.find({ userRef:req.params.id })
+      // console.log(listings);
       res.status(200).send({
         sucess:true , 
         listings
