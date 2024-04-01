@@ -17,8 +17,9 @@ const UpdateUserController = async (req, res) => {
         message: "you cannot update another account",
       });
     }
-    if (req.body.password) {
-      req.body.password = await hashPassword(req.body.password);
+    if (req.body.formData.password) {
+      req.body.formData.password = await hashPassword(req.body.formData.password);
+      // console.log(req.body.formData.password);
     }
     const updateUser = await userModel.findByIdAndUpdate(
       req.params.id,

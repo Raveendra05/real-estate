@@ -9,6 +9,7 @@ import NotFound from '../pages/notfound'
 import PrivateRoute from '../component/privateRoute'
 import CreateListing from '../pages/create-listing'
 import UpdateListing from '../pages/update-listing'
+import Listing from '../pages/listing'
 export default function AllRoutes() {
   return (
     <>
@@ -22,6 +23,7 @@ export default function AllRoutes() {
     <Route path='/update-listing/:listingId' element={<UpdateListing/>}/>
     </Route>
     <Route path='/signup' element={<SignUp/>}  />
+    <Route path='/listings/:id' element={<Listing/>}/>
     <Route path='*' element={<NotFound/>}/>
     </Routes>
     </>

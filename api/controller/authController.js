@@ -48,7 +48,7 @@ const SignUpController = async(req ,res)=>{
 
 const SignInController =async(req,res)=>{
     try {
-    const {email , password} = req.body
+    const {email , password} = req.body.formData
     // console.log(email);
         if(!email){
             return res.status(500).send({
