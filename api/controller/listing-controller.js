@@ -91,4 +91,48 @@ const GetUserListing = async(req ,res)=>{
         })
     }
 }
-module.exports = {CreateListingController ,DeleteUserListing,UpdateListingUserController , GetUserListing}
+
+const getAllListings = async(req ,res)=>{
+    try {
+        let limit = parseInt(req.query.limit) || 9 ;
+        let startIndex = parseInt(req.query.startIndex) || 0;
+        let offer = req.query.offer
+
+        if(offer === undefined ||  offer === "false"){
+            offer = {$in :[false , true]}
+        }
+        let furnished = req.query.furnished;
+        if(furnished === undefined || furnished === 'false'){
+            furnished = {$in : [false , true]}
+        }
+        let parking = req.query.parking;
+        if(parking === undefined || parking === 'false'){
+            parking = {$in:[false , true]}
+        }
+        let type = req.query.type;
+        if(type === undefined || type === 'all'){
+            type = {$in:['rent' , 'sale']}
+        }
+        let searchTerm = req.query.serchTerm || '';
+        let sort = req.query.sort || 'createdAt';
+        let order = req.query.order || 'desc'
+
+        const listings = await listingModel.find({
+            name:{$regex:searchTerm , $options: 'i'},
+            offer ,
+            furnished ,
+            parking ,
+            type , 
+        }).sort(
+            {[sort] : order}
+        ).limit(limit).skip(startIndex)
+
+        return res.status(200).json(listings)
+    } catch (error) {
+        res.status(500).send({
+            sucess:false , 
+            message:"error in getting the listings"
+        })
+    }
+}
+module.exports = {CreateListingController ,DeleteUserListing,UpdateListingUserController , GetUserListing ,getAllListings}
