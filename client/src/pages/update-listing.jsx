@@ -131,7 +131,7 @@ export default function UpdateListing() {
             console.log("res", res);
             if (res.status === 200) {
                 setLoading(false);
-                navigate(`/listing/${res.data.updatedlist._id}`)
+                navigate(`/listings/${res.data.updatedlist._id}`)
             }
         } catch (error) {
             setError(error.response.data.error.message)

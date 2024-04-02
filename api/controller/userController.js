@@ -72,10 +72,32 @@ const getUserAllListings = async(req, res)=>{
   }
   else{
     return  res.status(500).send({
-      sucess:"false" , 
+      sucess:false , 
       message:"you can only view our own listing"
     })
   }
 
 }
-module.exports = { test, UpdateUserController, DeleteUserController,getUserAllListings };
+const getUserController = async(req, res)=>{
+  try {
+    const user = await userModel.findById(req.params.id)
+    if(!user){
+      res.status(500).send({
+        sucess:false ,
+        message:"user not found"
+      })
+    }
+    const {password :pass , ...rest} = user._doc;
+    res.status(200).send({
+      sucess:true , 
+      message:"user is",
+      rest
+    })
+  } catch (error) {
+    res.status(500).send({
+      sucess:false , 
+      error
+    })
+  }
+}
+module.exports = { test, UpdateUserController, DeleteUserController,getUserAllListings ,getUserController};
