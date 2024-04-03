@@ -226,7 +226,7 @@ export default function UpdateListing() {
                         ))
                     }
                     <button disabled={uploading || loading} className='p-3 bg-slate-800 rounded-lg uppercase text-white hover:opacity-90 disabled:opacity-80'>{
-                        loading ? "Listing...." : "Update Listing"
+                        loading ? "Updating...." : "Update Listing"
                     }</button>
                     {
                         <p className='text-red-600 text-sm'>{error && error}</p>

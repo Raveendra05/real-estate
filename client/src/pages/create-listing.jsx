@@ -115,7 +115,7 @@ export default function CreateListing() {
             console.log("res", res);
             if (res.status === 200) {
                 setLoading(false);
-                navigate(`/listing/${res.data._id}`)
+                navigate(`/listings/${res.data._id}`)
             }
         } catch (error) {
             setError(error.response.data.error.message)

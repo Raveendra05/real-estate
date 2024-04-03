@@ -84,7 +84,7 @@ export default function Listing() {
           }
           <div className='flex flex-col max-w-4xl mx-auto p-3 my-7 gap-5'>
             <p className='text-2xl font-semibold'>
-              {listings.name} - $(' ')
+              {listings.name} - ${' '}
               {
                 listings.offer ? 
                 listings.discountedPrice.toLocaleString('en-US')
@@ -97,10 +97,10 @@ export default function Listing() {
             {listings.address}
             </p>
             <div className='flex gap-4'>
-              <p className='bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>{listings.type === 'rent' ? 'For Rent' : 'For Sale'} </p>
+              <p className='bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md uppercase' >{listings.type === 'rent' ? 'For Rent' : 'For Sale'} </p>
               {
                 listings.offer && (
-                  <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>${+listings.regularPrice - +listings.discountedPrice}</p>
+                  <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md uppercase'>${+listings.regularPrice - +listings.discountedPrice} off  </p>
                 )
               }
             </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import ListingItem from '../component/listingItem'
 export default function Search() {
     const [sidebarData  , setSidebarData]  = useState({
         searchTerm :"",
@@ -52,10 +53,10 @@ export default function Search() {
             })
         }
         const fetchListing = async()=>{
-            setLoading(false)
+            setLoading(true)
             const searchQuery = urlParams.toString();
             const res =await axios.get(`api/listing/get?${searchQuery}`)
-            // console.log(res)
+            console.log(res)
             if(res.status === 200){
                 setListing(res.data)
                 setLoading(false)
@@ -88,6 +89,7 @@ export default function Search() {
                             placeholder='Search....'
                             className='p-3 w-full border rounded-lg'
                             onChange={handleChange}
+                            value={sidebarData.searchTerm}
                         />
                     </div>
                     <div className='flex gap-2 flex-wrap items-center'>
@@ -153,8 +155,21 @@ export default function Search() {
                     <button className='bg-slate-700 p-3 rounded-lg text-white uppercase hover:opacity-95'>Submit</button>
                 </form>
             </div>
-            <div className=''>
+            <div className='flex-1'>
                 <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-7'>listing result </h1>
+                <div className='p-7 flex flex-wrap gap-4'>
+                {!loading && listing.length === 0 && (
+                    <p className='text-xl text-slate-700'>No Listing</p>
+                )}
+                {loading && (
+                        <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
+                )}
+                {
+                    !loading && listing.map((listing)=>(
+                        <ListingItem key={listing._id}  listing = {listing}/>
+                    ))
+                }
+            </div>
             </div>
         </div>
     )
